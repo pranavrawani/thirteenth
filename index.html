@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Heart's Melody 🎵</title>
+    <style>
+        :root {
+            --bg-dark: #1a0b2e;
+            --neon-pink: #ff00ff;
+            --neon-purple: #9d00ff;
+            --neon-blue: #00ffff;
+            --key-white: #f0f0f0;
+            --key-black: #111;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #2e003e 0%, var(--bg-dark) 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* --- FLOATING BACKGROUND --- */
+        .floating-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .note {
+            position: absolute;
+            bottom: -50px;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.3);
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- MAIN CONTENT --- */
+        .container {
+            z-index: 10;
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-purple);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--neon-blue);
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px var(--neon-pink); }
+            to { text-shadow: 0 0 20px var(--neon-pink), 0 0 30px var(--neon-purple); }
+        }
+
+        /* --- PIANO --- */
+        .piano {
+            display: flex;
+            justify-content: center;
+            background: #222;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(157, 0, 255, 0.4);
+            position: relative;
+        }
+
+        .key {
+            width: 40px;
+            height: 140px;
+            margin: 0 2px;
+            background: var(--key-white);
+            border-radius: 0 0 5px 5px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.1s;
+            box-shadow: inset 0 -5px 0 rgba(0,0,0,0.2);
+        }
+
+        .key:active, .key.active {
+            transform: translateY(4px);
+            background: var(--neon-pink);
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+
+        .key.black {
+            width: 30px;
+            height: 90px;
+            background: var(--key-black);
+            margin-left: -15px;
+            margin-right: -15px;
+            z-index: 2;
+            color: white;
+        }
+
+        .key.black:active, .key.black.active {
+            background: var(--neon-blue);
+        }
+
+        .hint-text {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .key { width: 30px; height: 120px; }
+            .key.black { width: 24px; height: 75px; margin-left: -12px; margin-right: -12px; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="floating-bg" id="bg-container"></div>
+
+    <div class="container">
+        <h1>Happy Valentine's Day!</h1>
+        <p>You are the melody to my heart's rhythm.</p>
+
+        <div class="piano">
+            <div class="key white" data-note="C4"></div>
+            <div class="key black" data-note="C#4"></div>
+            <div class="key white" data-note="D4"></div>
+            <div class="key black" data-note="D#4"></div>
+            <div class="key white" data-note="E4"></div>
+            <div class="key white" data-note="F4"></div>
+            <div class="key black" data-note="F#4"></div>
+            <div class="key white" data-note="G4"></div>
+            <div class="key black" data-note="G#4"></div>
+            <div class="key white" data-note="A4"></div>
+            <div class="key black" data-note="A#4"></div>
+            <div class="key white" data-note="B4"></div>
+            <div class="key white" data-note="C5"></div>
+        </div>
+
+        <div class="hint-text">Tap the keys to play a song for me 🎵</div>
+    </div>
+
+    <script>
+        // --- FLOATING NOTES GENERATOR ---
+        const bgContainer = document.getElementById('bg-container');
+        const symbols = ['🎵', '🎹', '🎸', '🎷', '🎼', '🎧', '🎶'];
+
+        function createNote() {
+            const el = document.createElement('div');
+            el.classList.add('note');
+            el.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 5 + 5; 
+            el.style.animationDuration = duration + 's';
+            bgContainer.appendChild(el);
+            setTimeout(() => el.remove(), duration * 1000);
+        }
+        setInterval(createNote, 400);
+
+        // --- AUDIO SYNTHESIS (No MP3s needed) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        const notes = {
+            "C4": 261.63, "C#4": 277.18, "D4": 293.66, "D#4": 311.13,
+            "E4": 329.63, "F4": 349.23, "F#4": 369.99, "G4": 392.00,
+            "G#4": 415.30, "A4": 440.00, "A#4": 466.16, "B4": 493.88, "C5": 523.25
+        };
+
+        function playSound(note) {
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            osc.type = 'triangle'; // Smooth sound
+            osc.frequency.setValueAtTime(notes[note], audioCtx.currentTime);
+            
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
+
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 1);
+        }
+
+        // --- INTERACTION ---
+        document.querySelectorAll('.key').forEach(key => {
+            // Touch/Click Event
+            const play = (e) => {
+                e.preventDefault(); // Prevent scrolling on mobile
+                const note = key.getAttribute('data-note');
+                
+                // Visual Effect
+                key.classList.add('active');
+                setTimeout(() => key.classList.remove('active'), 200);
+                
+                // Sound Effect
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                playSound(note);
+                
+                // Create a little sparkle
+                createSparkle(e.target);
+            };
+
+            key.addEventListener('mousedown', play);
+            key.addEventListener('touchstart', play);
+        });
+
+        function createSparkle(target) {
+            const rect = target.getBoundingClientRect();
+            const sparkle = document.createElement('div');
+            sparkle.innerHTML = '✨';
+            sparkle.style.position = 'fixed';
+            sparkle.style.left = (rect.left + rect.width/2) + 'px';
+            sparkle.style.top = (rect.top - 20) + 'px';
+            sparkle.style.fontSize = '2rem';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.animation = 'floatUp 1s ease-out forwards';
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1000);
+        }
+    </script>
+</body>
+</html>
